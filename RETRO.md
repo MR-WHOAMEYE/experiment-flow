@@ -43,3 +43,25 @@
 -
 
 -->
+
+---
+
+## Sprint 1 Retrospective — 2026-08-13
+
+**Sprint Goal:** Users can upload CSV/Excel files; data loads into `raw_ingest`; re-uploads upsert without duplicates.
+**Stories Completed:** US-1.1 (5 pts), US-1.3 (5 pts) — 10/10 pts
+**Stories Carried Over:** None
+
+### What Went Well
+- TDD approach worked well: writing tests before implementation caught the need for specific IngestionError messages (e.g., "not found" vs "empty" vs "no data rows") that made all AC assertions pass cleanly.
+- 21/21 tests passed first run after implementation.
+- 95% coverage on `ingestion/` — significantly above the 70% floor.
+- `upsert_to_clean_records()` cleanly implements ADR-001 with a single SQL statement; no application-level pre-check needed.
+- `db/connection.py` is a clean shared abstraction — no module will construct its own engine.
+
+### What Didn't Go Well
+- `pytest.ini` BOM bug: PowerShell `Set-Content -Encoding UTF8` on Windows prepends a UTF-8 BOM (`\ufeff`) which pytest cannot parse. Fixed by switching to `-Encoding ASCII`. This is a Windows-specific gotcha that cost one failed run.
+- The `malformed_csv` fixture (inconsistent column counts) did not actually cause a parse error with pandas default settings — pandas was lenient. Need to revisit if stricter CSV validation is required (noted for future).
+
+### One Concrete Change for Next Sprint
+- **Sprint 2**: All `.env.example` env vars needed for new connectors must be identified and added BEFORE writing any connector code — not discovered mid-implementation. This avoids the credential-handling being an afterthought.

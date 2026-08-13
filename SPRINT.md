@@ -1,44 +1,53 @@
 ﻿# SPRINT.md — Current Sprint
 
-> **Rule:** Wipe and rewrite this file at the start of each new sprint. Do NOT accumulate past sprints here — history lives in RETRO.md.
+> **Rule:** Wipe and rewrite this file at the start of each new sprint. History lives in RETRO.md.
 
 ---
 
-## Sprint 0 — Repo Skeleton & Infrastructure Setup ✅ COMPLETE
+## Sprint 1 — Data Ingestion (File Upload + Upsert) ✅ COMPLETE
 
 | Field | Value |
 |-------|-------|
-| **Sprint Goal** | Establish the repo skeleton, DB schema, tracking files, and seed ADRs so every subsequent sprint has a clean foundation. No feature code. |
+| **Sprint Goal** | Users can upload CSV/Excel files; data lands in `raw_ingest`; re-uploads upsert cleanly with no duplicates. |
 | **Start Date** | 2026-08-13 |
 | **End Date** | 2026-08-13 |
-| **Total Points** | ~5 (infra, no story points) |
-| **Git Tag** | `v0.0.0-sprint0` (commit `b41a41c`) |
+| **Total Points** | 10 |
+| **Git Tag** | `v0.1.0-sprint1` (commit `6ad224b`) |
 
 ---
 
-## Committed Stories / Tasks
+## Stories
 
-| # | Task | Done? |
-|---|------|-------|
-| S0-01 | Create top-level folder structure | [x] |
-| S0-02 | Write `.env.example` with all env vars | [x] |
-| S0-03 | Write `requirements.txt` with pinned versions | [x] |
-| S0-04 | Configure `pytest.ini` | [x] |
-| S0-05 | Write `db/migrations/001_initial_schema.sql` (all 5 tables) | [x] |
-| S0-06 | Write seed ADR files: ADR-001, ADR-002, ADR-003 | [x] |
-| S0-07 | Create tracking files: BACKLOG.md, SPRINT.md, TASK.md, TRACK.md, RETRO.md | [x] |
-| S0-08 | Write `README.md` with project overview and local setup instructions | [x] |
-| S0-09 | Git repo initialized, `.gitignore` written, committed, tagged `v0.0.0-sprint0` | [x] |
+| Story | Title | Points | Status |
+|-------|-------|--------|--------|
+| US-1.1 | Upload CSV / Excel file | 5 | ✅ Done |
+| US-1.3 | Re-upload without duplicates (upsert) | 5 | ✅ Done |
 
 ---
 
-## Sign-off Criteria
+## Story Checklist
 
-- [x] Repo clones clean on a fresh machine (documented in README)
-- [x] `pytest` runs with zero errors (no tests yet, just config valid)
-- [x] `db/migrations/001_initial_schema.sql` written — apply against PostgreSQL to verify
-- [x] All 5 tracking files exist and are pre-filled per spec
+### US-1.1
+- [x] `ingestion/logger.py` — shared structured JSON logger
+- [x] `db/connection.py` — `get_engine()` / `get_connection()` context manager
+- [x] `tests/test_file_ingestor.py` — 13 tests written first (TDD)
+- [x] `ingestion/file_ingestor.py` — `parse_csv`, `parse_excel`, `ingest_file`
+- [x] 13/13 tests PASSED | coverage: ingestion/ 95%
+
+### US-1.3
+- [x] `tests/test_upsert.py` — 8 tests written first (TDD)
+- [x] `upsert_to_clean_records()` in `file_ingestor.py`
+- [x] 8/8 tests PASSED
 
 ---
 
-_Sprint 0 closed. Next: Sprint 1 — Data Ingestion (US-1.1, US-1.3, 10 pts)_
+## Sign-off
+- [x] 21/21 tests pass — `pytest tests/test_file_ingestor.py tests/test_upsert.py -v`
+- [x] Coverage: ingestion/ **95%** (threshold: 70%)
+- [x] Gherkin ACs demonstrable via test names and assertions
+- [x] BACKLOG.md: US-1.1, US-1.3 → Done
+- [x] TRACK.md entry appended
+- [x] RETRO.md Sprint 1 entry written
+- [x] Tag: `v0.1.0-sprint1`
+
+_Sprint 1 closed. Next: Sprint 2 — External Connectors + Data Cleaning (US-1.2, US-2.1, 11 pts)_
