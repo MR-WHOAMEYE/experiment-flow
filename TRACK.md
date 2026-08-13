@@ -148,3 +148,26 @@
 
 **Next:**
 - Sprint 4: US-4.1 (No-code experiment config, 8 pts) & US-4.2 (Statistically valid A/B results, 5 pts).
+
+---
+
+## 2026-08-13 — US-4.1 + US-4.2 (Sprint 4 Complete)
+
+**What was done:**
+- Wrote `ab_testing/config.py`: `ExperimentConfig` dataclass and `validate_config()` schema validator enforcing variant_column existence (≥2 distinct groups), metric_column existence, and metric_type ("numeric" | "categorical").
+- Wrote `ab_testing/engine.py`:
+  - `evaluate_experiment()`: automatically runs Welch's t-test + Cohen's d + 95% CI for numeric metrics, or Chi-square test + Cramér's V for categorical metrics.
+  - Computes `is_significant` flag (p < 0.05).
+  - `save_experiment_result()`: inserts experiment outcome into PostgreSQL `experiments` table.
+- Wrote `tests/test_ab_config.py` (5 tests) and `tests/test_ab_engine.py` (3 tests).
+- Ran `pytest`: 58/58 PASSED. Overall coverage: **92%** (ab_testing coverage: **96%**).
+- Tagged `v0.4.0-sprint4`.
+- Updated BACKLOG.md: US-4.1, US-4.2 -> Done.
+
+**Decisions made:**
+- Engine complies strictly with ADR-002: reusable config object passed to general statistical engine (not hardcoded per dataset).
+
+**Blockers:** None.
+
+**Next:**
+- Sprint 5: US-5.1 (Train ML model on user-selected target, 8 pts) & US-5.2 (Auto-retrain model when new data arrives, 5 pts).

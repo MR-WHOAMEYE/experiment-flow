@@ -1,22 +1,42 @@
-﻿# TASK.md — Active Story: US-3.1
+﻿# TASK.md — Active Stories: US-4.1 & US-4.2
 
-**Story:** US-3.1 — Database & Query Optimization
-**Sprint:** 3 | **Status:** ✅ Complete
+**Stories:** US-4.1 (Experiment Config) & US-4.2 (A/B Testing Engine)
+**Sprint:** 4 | **Status:** In Progress
+
+---
+
+## Gherkin ACs
+```
+Given a dataset in clean_records
+When a user specifies variant_column, metric_column, and metric_type
+Then an ExperimentConfig object is validated against the dataset schema
+
+Given a valid ExperimentConfig and clean_records dataset
+When the engine executes the experiment
+Then it runs independent samples t-test (numeric) or chi-square test (categorical)
+And calculates p-value, effect size, confidence interval, and statistical significance (p < 0.05)
+And stores results in the experiments table
+```
 
 ---
 
 ## Task Breakdown
 
-### US-3.1 — DB & Query Optimization (5 pts)
-- [x] `db/benchmark.py`:
-  - [x] `parse_explain_output()` — extracts execution time (ms) and total planner cost from raw PostgreSQL EXPLAIN output
-  - [x] `benchmark_query()` — executes query before/after index creation and measures timings
-  - [x] `save_benchmark()` — records result in `query_benchmarks` table
-- [x] `tests/test_benchmark.py` (5 tests):
-  - [x] EXPLAIN output parser regex validation
-  - [x] Speedup multiplier computation
-  - [x] `query_benchmarks` DB insertion mock
-- [x] `scripts/seed_and_benchmark.py`:
-  - [x] Seeded 10,000 synthetic records into `clean_records`
-  - [x] Measured baseline query execution time (21.09 ms, cost 297.0) vs indexed execution time (0.08 ms, cost 8.3)
-  - [x] Verified **263.62x speedup** on live Neon PostgreSQL database
+### A — Tests first (TDD)
+- [ ] `tests/test_ab_config.py`:
+  - [ ] Valid config passes validation
+  - [ ] Missing variant/metric column raises `ConfigValidationError`
+  - [ ] Invalid metric_type raises `ConfigValidationError`
+- [ ] `tests/test_ab_engine.py`:
+  - [ ] Numeric metric -> Welch's t-test, Cohen's d, 95% CI, p-value, significant flag
+  - [ ] Categorical metric -> Chi-square test, Cramér's V, p-value, significant flag
+  - [ ] Experiment results saved to `experiments` table
+
+### B — Implementation
+- [ ] `ab_testing/config.py`: `ExperimentConfig` dataclass & `validate_config()`
+- [ ] `ab_testing/engine.py`: `evaluate_experiment()` & `save_experiment_result()`
+
+### C — Verify & close
+- [ ] All tests pass (`pytest`)
+- [ ] Coverage ≥ 70% on `ab_testing/`
+- [ ] BACKLOG.md & SPRINT.md updated

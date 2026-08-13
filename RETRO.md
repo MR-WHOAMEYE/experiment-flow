@@ -104,3 +104,22 @@
 
 ### One Concrete Change for Next Sprint
 - **Sprint 4**: Ensure `ExperimentConfig` validation (ADR-002) raises clear domain exceptions (`ConfigValidationError`) when requested variant/metric columns do not exist in `clean_records`.
+
+---
+
+## Sprint 4 Retrospective — 2026-08-13
+
+**Sprint Goal:** Users can configure and execute statistically valid A/B experiments (t-test / chi-square) with p-value, effect size, and confidence intervals stored in DB.
+**Stories Completed:** US-4.1 (8 pts), US-4.2 (5 pts) — 13/13 pts
+**Stories Carried Over:** None
+
+### What Went Well
+- Pure statistical engine decouples test logic from DB loading, allowing 100% synthetic DataFrame testing.
+- ADR-002 design validated: single ExperimentConfig object works seamlessly for both numeric and categorical metrics.
+- 58/58 unit tests passing with 92% code coverage.
+
+### What Didn't Go Well
+- Reserved logging key collision: `extra={"name": ...}` in Python logging collided with `LogRecord.name`. Renamed extra parameter to `exp_name`.
+
+### One Concrete Change for Next Sprint
+- **Sprint 5**: Ensure serialized ML models (`models/*.pkl`) are stored in `models/` directory while their metadata and metrics (RMSE, R2, Accuracy) are recorded in the `predictions` DB table.

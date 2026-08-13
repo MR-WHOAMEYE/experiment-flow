@@ -35,8 +35,8 @@
 
 | Story | Title | Points | Status | Notes |
 |-------|-------|--------|--------|-------|
-| US-4.1 | Define experiment config (no-code) | 8 | Not Started | Depends on US-2.1 |
-| US-4.2 | Compute statistically valid results | 5 | Not Started | Depends on US-4.1 |
+| US-4.1 | Define experiment config (no-code) | 8 | Done | Depends on US-2.1 |
+| US-4.2 | Compute statistically valid results | 5 | Done | Depends on US-4.1 |
 
 ---
 
@@ -88,6 +88,8 @@
 | Sprint 6 | US-6.1, US-6.2, US-7.1 | 13 | Dashboard + n8n automation |
 | Sprint 7 | US-8.1, US-8.2 | 11 | Self-service frontend |
 | **Total** | | **~81 pts** | |
+
+
 
 
 
