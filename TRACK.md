@@ -171,3 +171,27 @@
 
 **Next:**
 - Sprint 5: US-5.1 (Train ML model on user-selected target, 8 pts) & US-5.2 (Auto-retrain model when new data arrives, 5 pts).
+
+---
+
+## 2026-08-13 — US-5.1 + US-5.2 (Sprint 5 Complete)
+
+**What was done:**
+- Wrote `ml/trainer.py`:
+  - `train_model()`: supports Regression (RandomForestRegressor, RMSE, R2) and Classification (RandomForestClassifier, Accuracy, F1 macro).
+  - Serializes `.joblib` model artifacts into `models/` directory.
+  - `save_prediction_metadata()`: records model metadata in PostgreSQL `predictions` table.
+- Wrote `ml/predictor.py`: `predict()` aligns features and computes inference on new input DataFrames.
+- Wrote `ml/retrainer.py`: `auto_retrain_if_needed()` checks current vs previously trained row count and triggers auto-retraining when new rows are detected.
+- Wrote `tests/test_ml_trainer.py` (4 tests) and `tests/test_ml_retrainer.py` (2 tests).
+- Ran `pytest`: 64/64 PASSED. Overall coverage: **93%** (`ml/` coverage: **97%**).
+- Tagged `v0.5.0-sprint5`.
+- Updated BACKLOG.md: US-5.1, US-5.2 -> Done.
+
+**Decisions made:**
+- Models use scikit-learn `RandomForest` defaults with one-hot encoding for categorical features, making the training pipeline fully domain-agnostic.
+
+**Blockers:** None.
+
+**Next:**
+- Sprint 6: US-6.1 (Descriptive stats view), US-6.2 (Experiment & prediction results view), US-7.1 (n8n automation workflow).

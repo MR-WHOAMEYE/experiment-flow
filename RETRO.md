@@ -123,3 +123,22 @@
 
 ### One Concrete Change for Next Sprint
 - **Sprint 5**: Ensure serialized ML models (`models/*.pkl`) are stored in `models/` directory while their metadata and metrics (RMSE, R2, Accuracy) are recorded in the `predictions` DB table.
+
+---
+
+## Sprint 5 Retrospective — 2026-08-13
+
+**Sprint Goal:** Users can train ML models (Regression / Classification) on user-selected target columns; models auto-retrain when new dataset rows arrive, saving artifacts to disk and metadata to `predictions`.
+**Stories Completed:** US-5.1 (8 pts), US-5.2 (5 pts) — 13/13 pts
+**Stories Carried Over:** None
+
+### What Went Well
+- Automated feature preprocessing (`pd.get_dummies`) handles categorical and numeric predictor variables seamlessly.
+- Model artifacts are cleanly serialized with `joblib` while DB `predictions` table tracks training row count and performance metrics.
+- 64/64 unit tests passing with 93% code coverage.
+
+### What Didn't Go Well
+- None. scikit-learn & joblib integration ran without issues.
+
+### One Concrete Change for Next Sprint
+- **Sprint 6**: Streamlit dashboard components (`dashboard/`) should read cleanly from DB tables (`clean_records`, `experiments`, `predictions`, `query_benchmarks`) with caching to ensure fast UI rendering.

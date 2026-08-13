@@ -4,15 +4,15 @@
 
 ---
 
-## Sprint 4 — A/B Testing Engine ✅ COMPLETE
+## Sprint 5 — ML Prediction Module ✅ COMPLETE
 
 | Field | Value |
 |-------|-------|
-| **Sprint Goal** | Users can configure and execute statistically valid A/B experiments (t-test / chi-square) with p-value, effect size, and confidence intervals stored in DB. |
+| **Sprint Goal** | Users can train ML models (Regression / Classification) on user-selected target columns; models auto-retrain when new dataset rows arrive, saving artifacts to disk and metadata to `predictions`. |
 | **Start Date** | 2026-08-13 |
 | **End Date** | 2026-08-13 |
 | **Total Points** | 13 |
-| **Git Tag** | `v0.4.0-sprint4` |
+| **Git Tag** | `v0.5.0-sprint5` |
 
 ---
 
@@ -20,32 +20,32 @@
 
 | Story | Title | Points | Status |
 |-------|-------|--------|--------|
-| US-4.1 | Define experiment config (no-code) | 8 | ✅ Done |
-| US-4.2 | Compute statistically valid results | 5 | ✅ Done |
+| US-5.1 | Train model on user-selected target column | 8 | ✅ Done |
+| US-5.2 | Auto-retrain model when new data arrives | 5 | ✅ Done |
 
 ---
 
 ## Story Checklist
 
-### US-4.1 — Experiment Config
-- [x] `ab_testing/config.py` — `ExperimentConfig` dataclass and schema validator (`ConfigValidationError`)
-- [x] `tests/test_ab_config.py` — 5 unit tests for config creation & schema validation
+### US-5.1 — ML Model Training
+- [x] `ml/trainer.py` — `train_model()`, model type detection (regression vs classification), feature preprocessing, metrics (RMSE/R2, Accuracy/F1), model serialization (`joblib`)
+- [x] `ml/predictor.py` — `predict()` loads saved model artifact and computes predictions
+- [x] `tests/test_ml_trainer.py` — 4 unit tests for training, metrics, saving, and predicting
 
-### US-4.2 — Statistical Engine
-- [x] `ab_testing/engine.py` — `evaluate_experiment()`: Welch's t-test (`scipy.stats.ttest_ind`), Chi-square (`scipy.stats.chi2_contingency`), Cohen's d, Cramér's V, 95% CI
-- [x] `save_experiment_result()` — DB persistence into `experiments` table
-- [x] `tests/test_ab_engine.py` — 3 unit tests for numeric/categorical A/B tests & DB persistence
-- [x] 58/58 total tests PASSED | overall coverage: 92%
+### US-5.2 — Auto-Retraining Trigger
+- [x] `ml/retrainer.py` — `auto_retrain_if_needed()` triggers retraining when dataset row count increases
+- [x] `tests/test_ml_retrainer.py` — 2 unit tests for auto-retrain workflow & DB metadata update
+- [x] 64/64 total tests PASSED | overall coverage: 93%
 
 ---
 
 ## Sign-off
-- [x] 58/58 tests pass — `pytest`
-- [x] Coverage: `ab_testing/` **98%** (threshold: 70%)
-- [x] Gherkin ACs verified (ADR-002 compliant)
-- [x] BACKLOG.md: US-4.1, US-4.2 → Done
+- [x] 64/64 tests pass — `pytest`
+- [x] Coverage: `ml/` **97%** (threshold: 70%)
+- [x] Gherkin ACs verified
+- [x] BACKLOG.md: US-5.1, US-5.2 → Done
 - [x] TRACK.md entry appended
-- [x] RETRO.md Sprint 4 entry written
-- [x] Tag: `v0.4.0-sprint4`
+- [x] RETRO.md Sprint 5 entry written
+- [x] Tag: `v0.5.0-sprint5`
 
-_Sprint 4 closed. Next: Sprint 5 — ML Prediction Module (US-5.1, US-5.2, 13 pts)_
+_Sprint 5 closed. Next: Sprint 6 — Dashboard + n8n Automation (US-6.1, US-6.2, US-7.1, 13 pts)_
