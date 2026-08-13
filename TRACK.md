@@ -121,3 +121,30 @@
 
 **Next:**
 - Sprint 3: US-3.1 (DB indexing & query benchmarks, 5 pts).
+
+---
+
+## 2026-08-13 — US-3.1 (Sprint 3 Complete)
+
+**What was done:**
+- Wrote `db/benchmark.py`:
+  - `parse_explain_output()`: parses PostgreSQL `EXPLAIN (ANALYZE, BUFFERS, FORMAT TEXT)` output for execution time (ms) and total planner cost.
+  - `benchmark_query()`: measures query execution before index creation, creates index, measures query execution after index, calculates speedup ratio.
+  - `save_benchmark()`: persists benchmark records into `query_benchmarks` table (ADR-003).
+- Wrote `tests/test_benchmark.py` (5 tests): verified EXPLAIN parser regex, speedup calculations, and DB insertion.
+- Wrote `scripts/seed_and_benchmark.py`: seeded 10,000 synthetic `clean_records` into live Neon PostgreSQL DB and executed benchmark.
+- Results on 10,000 live records:
+  - Before index: 21.09 ms (Plan cost: 297.0)
+  - After index: 0.08 ms (Plan cost: 8.3)
+  - **Speedup: 263.62x faster**
+- Ran `pytest`: 50/50 PASSED. Overall coverage: **91%**.
+- Tagged `v0.3.0-sprint3`.
+- Updated BACKLOG.md: US-3.1 -> Done.
+
+**Decisions made:**
+- Benchmark metrics are recorded in PostgreSQL table `query_benchmarks` per ADR-003 so dashboard can display query performance improvements.
+
+**Blockers:** None.
+
+**Next:**
+- Sprint 4: US-4.1 (No-code experiment config, 8 pts) & US-4.2 (Statistically valid A/B results, 5 pts).

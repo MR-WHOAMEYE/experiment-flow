@@ -27,7 +27,7 @@
 
 | Story | Title | Points | Status | Notes |
 |-------|-------|--------|--------|-------|
-| US-3.1 | Index common queries; benchmark before/after | 5 | Not Started | Depends on US-2.1 |
+| US-3.1 | Index common queries; benchmark before/after | 5 | Done | Depends on US-2.1 |
 
 ---
 
@@ -88,5 +88,7 @@
 | Sprint 6 | US-6.1, US-6.2, US-7.1 | 13 | Dashboard + n8n automation |
 | Sprint 7 | US-8.1, US-8.2 | 11 | Self-service frontend |
 | **Total** | | **~81 pts** | |
+
+
 
 

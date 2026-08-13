@@ -85,3 +85,22 @@
 
 ### One Concrete Change for Next Sprint
 - **Sprint 3**: When benchmarking DB queries (EXPLAIN ANALYZE per ADR-003), ensure both indexed and unindexed table states are clean and isolated so benchmark timing measurements in `query_benchmarks` are accurate.
+
+---
+
+## Sprint 3 Retrospective — 2026-08-13
+
+**Sprint Goal:** Common query patterns on `clean_records` are indexed; before/after performance is benchmarked using `EXPLAIN ANALYZE` and recorded in `query_benchmarks`.
+**Stories Completed:** US-3.1 (5 pts) — 5/5 pts
+**Stories Carried Over:** None
+
+### What Went Well
+- Real empirical verification: tested on 10,000 synthetic records against live Neon PostgreSQL database.
+- Measurable impact: `EXPLAIN ANALYZE` demonstrated a **263.62x speedup** (21.09 ms -> 0.08 ms) after creating composite index `(dataset_id, unique_key)`.
+- 50/50 unit tests passing with 91% code coverage.
+
+### What Didn't Go Well
+- None. Benchmark parser and live DB execution worked cleanly.
+
+### One Concrete Change for Next Sprint
+- **Sprint 4**: Ensure `ExperimentConfig` validation (ADR-002) raises clear domain exceptions (`ConfigValidationError`) when requested variant/metric columns do not exist in `clean_records`.

@@ -1,32 +1,22 @@
-﻿# TASK.md — Active Story: US-1.2 & US-2.1
+﻿# TASK.md — Active Story: US-3.1
 
-**Stories:** US-1.2 (External Connectors) & US-2.1 (Auto Data Cleaner)
-**Sprint:** 2 | **Status:** ✅ Complete
+**Story:** US-3.1 — Database & Query Optimization
+**Sprint:** 3 | **Status:** ✅ Complete
 
 ---
 
 ## Task Breakdown
 
-### US-1.2 — External Connectors (8 pts)
-- [x] `tests/test_connectors.py` (13 tests):
-  - [x] `test_api_connector_fetch_success`
-  - [x] `test_api_connector_fetch_failure`
-  - [x] `test_api_test_connection_success`
-  - [x] `test_api_test_connection_failure`
-  - [x] `test_postgres_connector_test_connection_success`
-  - [x] `test_postgres_connector_test_connection_failure`
-  - [x] `test_postgres_connector_fetch`
-  - [x] `test_mysql_connector_test_connection_success`
-  - [x] `test_mysql_connector_fetch`
-- [x] `ingestion/connectors/base.py` — `BaseConnector` ABC + `ConnectorError`
-- [x] `ingestion/connectors/api_connector.py` — REST API integration
-- [x] `ingestion/connectors/postgres_connector.py` — SQLAlchemy Core PostgreSQL query connector
-- [x] `ingestion/connectors/mysql_connector.py` — SQLAlchemy Core MySQL query connector
-
-### US-2.1 — Auto Data Cleaning (3 pts)
-- [x] `tests/test_cleaner.py` (11 tests):
-  - [x] Exact duplicate row removal
-  - [x] HTML tag & Emoji regex stripping
-  - [x] >50% missing column dropping
-  - [x] Numeric median & categorical mode imputation
-- [x] `cleaning/cleaner.py` — `clean(df)` transformation & `CleaningReport` audit log
+### US-3.1 — DB & Query Optimization (5 pts)
+- [x] `db/benchmark.py`:
+  - [x] `parse_explain_output()` — extracts execution time (ms) and total planner cost from raw PostgreSQL EXPLAIN output
+  - [x] `benchmark_query()` — executes query before/after index creation and measures timings
+  - [x] `save_benchmark()` — records result in `query_benchmarks` table
+- [x] `tests/test_benchmark.py` (5 tests):
+  - [x] EXPLAIN output parser regex validation
+  - [x] Speedup multiplier computation
+  - [x] `query_benchmarks` DB insertion mock
+- [x] `scripts/seed_and_benchmark.py`:
+  - [x] Seeded 10,000 synthetic records into `clean_records`
+  - [x] Measured baseline query execution time (21.09 ms, cost 297.0) vs indexed execution time (0.08 ms, cost 8.3)
+  - [x] Verified **263.62x speedup** on live Neon PostgreSQL database
