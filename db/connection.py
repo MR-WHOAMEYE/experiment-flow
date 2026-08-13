@@ -1,4 +1,4 @@
-﻿"""
+"""
 Shared database connection helpers for the EaaS platform.
 
 All pipeline modules import from here — never construct engines directly.
@@ -14,8 +14,11 @@ import os
 from contextlib import contextmanager
 from typing import Generator
 
+from dotenv import load_dotenv
 from sqlalchemy import create_engine, text, Connection
 from sqlalchemy.engine import Engine
+
+load_dotenv()
 
 
 def get_engine(database_url: str | None = None) -> Engine:
