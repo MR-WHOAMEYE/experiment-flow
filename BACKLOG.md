@@ -70,8 +70,8 @@
 
 | Story | Title | Points | Status | Notes |
 |-------|-------|--------|--------|-------|
-| US-8.1 | Form-driven experiment creation | 8 | Not Started | Depends on US-4.1, US-6.1 |
-| US-8.2 | Plain-language results summary | 3 | Not Started | Depends on US-4.2, US-8.1 |
+| US-8.1 | Form-driven experiment creation | 8 | Done | Depends on US-4.1, US-6.1 |
+| US-8.2 | Plain-language results summary | 3 | Done | Depends on US-4.2, US-8.1 |
 
 ---
 
@@ -88,6 +88,8 @@
 | Sprint 6 | US-6.1, US-6.2, US-7.1 | 13 | Dashboard + n8n automation |
 | Sprint 7 | US-8.1, US-8.2 | 11 | Self-service frontend |
 | **Total** | | **~81 pts** | |
+
+
 
 
 

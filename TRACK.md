@@ -221,3 +221,26 @@
 
 **Next:**
 - Sprint 7: US-8.1 (Form-driven experiment creation, 8 pts) & US-8.2 (Plain-language results summary, 3 pts).
+
+---
+
+## 2026-08-13 — US-8.1 + US-8.2 (Sprint 7 & Final Project Release)
+
+**What was done:**
+- Wrote `dashboard/narrative.py`:
+  - `generate_ab_narrative()`: translates p-values, effect sizes, test types, and mean differences into clear English text highlighting statistical significance.
+  - `generate_ml_narrative()`: translates R2/RMSE or Accuracy/F1 scores into plain-language model quality summaries.
+- Updated `dashboard/app.py`:
+  - Added interactive "Create A/B Experiment" Streamlit form allowing non-technical users to select datasets, variant/metric columns, and execute experiments on the fly.
+  - Integrated plain-language summary cards into A/B Results and ML Predictions tabs.
+- Wrote `tests/test_narrative.py` (4 tests) and `tests/test_dashboard_forms.py` (1 test).
+- Ran `pytest`: 76/76 PASSED across all modules. Overall coverage: **80%**.
+- Tagged `v1.0.0-final`.
+- Updated BACKLOG.md: All stories (US-1.1 through US-8.2) marked **Done**.
+
+**Decisions made:**
+- Self-service UI allows zero-code execution of statistical experiments and instant rendering of plain-language business insights.
+
+**Blockers:** None.
+
+**Status:** Project complete. 81 points delivered across 7 sprints.

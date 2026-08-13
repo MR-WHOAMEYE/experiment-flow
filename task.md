@@ -1,21 +1,17 @@
-﻿# TASK.md — Active Stories: US-6.1, US-6.2 & US-7.1
+﻿# TASK.md — Active Stories: US-8.1 & US-8.2
 
-**Stories:** US-6.1 (Descriptive Stats), US-6.2 (Results View), US-7.1 (Pipeline Runner)
-**Sprint:** 6 | **Status:** ✅ Complete
+**Stories:** US-8.1 (Form-Driven Creation) & US-8.2 (Plain-Language Narratives)
+**Sprint:** 7 | **Status:** ✅ All Sprints Complete (v1.0.0-final)
 
 ---
 
 ## Task Breakdown
 
-### US-6.1 — Descriptive Stats (5 pts)
-- [x] `dashboard/stats.py` — `compute_summary_stats()`
-- [x] `tests/test_dashboard_stats.py` (2 tests)
+### US-8.1 — Form-Driven Creation (8 pts)
+- [x] Streamlit form in `dashboard/app.py`
+- [x] `tests/test_dashboard_forms.py` (1 test)
 
-### US-6.2 — Results View (3 pts)
-- [x] `dashboard/results.py` — DB load functions & Plotly charts
-- [x] `dashboard/app.py` — Streamlit tabbed UI app
-- [x] `tests/test_dashboard_results.py` (4 tests)
-
-### US-7.1 — Automated Pipeline Runner (5 pts)
-- [x] `scripts/run_pipeline.py` — `run_end_to_end_pipeline()`
-- [x] `tests/test_pipeline_runner.py` (1 test)
+### US-8.2 — Plain-Language Narrative Summary (3 pts)
+- [x] `dashboard/narrative.py` — `generate_ab_narrative()` & `generate_ml_narrative()`
+- [x] Integrated expander cards in Streamlit UI
+- [x] `tests/test_narrative.py` (4 tests)

@@ -4,15 +4,15 @@
 
 ---
 
-## Sprint 6 — Dashboard + n8n Automation ✅ COMPLETE
+## Sprint 7 — Self-Service Frontend ✅ COMPLETE & PROJECT SIGN-OFF
 
 | Field | Value |
 |-------|-------|
-| **Sprint Goal** | Interactive Streamlit dashboard displays descriptive stats, A/B experiment charts, ML metrics, and query benchmarks; automated end-to-end pipeline runner supports scheduled execution. |
+| **Sprint Goal** | Form-driven experiment & ML model creation in Streamlit dashboard with plain-language natural language summaries for non-technical users. |
 | **Start Date** | 2026-08-13 |
 | **End Date** | 2026-08-13 |
-| **Total Points** | 13 |
-| **Git Tag** | `v0.6.0-sprint6` |
+| **Total Points** | 11 |
+| **Git Tag** | `v1.0.0-final` |
 
 ---
 
@@ -20,37 +20,29 @@
 
 | Story | Title | Points | Status |
 |-------|-------|--------|--------|
-| US-6.1 | Descriptive stats view | 5 | ✅ Done |
-| US-6.2 | Experiment & prediction results view | 3 | ✅ Done |
-| US-7.1 | Scheduled full pipeline (n8n cron / CLI runner) | 5 | ✅ Done |
+| US-8.1 | Form-driven experiment creation | 8 | ✅ Done |
+| US-8.2 | Plain-language results summary | 3 | ✅ Done |
 
 ---
 
 ## Story Checklist
 
-### US-6.1 — Descriptive Stats Dashboard
-- [x] `dashboard/stats.py` — `compute_summary_stats()` helper & Streamlit metrics view
-- [x] `tests/test_dashboard_stats.py` — 2 unit tests for stats calculation & summary table formatting
+### US-8.1 — Form-Driven Creation
+- [x] Streamlit form in `dashboard/app.py` for interactive A/B experiment creation
+- [x] Streamlit form in `dashboard/app.py` for interactive ML model training
+- [x] `tests/test_dashboard_forms.py` — 1 unit test for interactive creation logic
 
-### US-6.2 — Results Dashboard (Experiments & ML)
-- [x] `dashboard/results.py` — A/B experiment charts, ML metrics display, and query benchmark plots
-- [x] `dashboard/app.py` — Main Streamlit navigation app (Descriptive Stats, A/B Experiments, ML Predictions, Benchmarks)
-- [x] `tests/test_dashboard_results.py` — 4 unit tests for DB data loading & Plotly figure generation
-
-### US-7.1 — Automated Full Pipeline Runner
-- [x] `scripts/run_pipeline.py` — CLI & n8n webhook runner executing Ingestion -> Cleaning -> Upsert -> A/B Experiment -> ML Retrain sequentially
-- [x] `tests/test_pipeline_runner.py` — 1 unit test for full automated pipeline execution
-- [x] 71/71 total tests PASSED | overall coverage: 93%
+### US-8.2 — Plain-Language Narrative Summary
+- [x] `dashboard/narrative.py` — `generate_ab_narrative()` and `generate_ml_narrative()`
+- [x] Integrated plain-language text cards into `dashboard/app.py`
+- [x] `tests/test_narrative.py` — 4 unit tests for narrative generation
+- [x] 76/76 total tests PASSED | overall coverage: 80%
 
 ---
 
-## Sign-off
-- [x] 71/71 tests pass — `pytest`
-- [x] Coverage: `dashboard/` **97%** (threshold: 70%)
-- [x] Streamlit dashboard app ready (`streamlit run dashboard/app.py`)
-- [x] BACKLOG.md: US-6.1, US-6.2, US-7.1 → Done
-- [x] TRACK.md entry appended
-- [x] RETRO.md Sprint 6 entry written
-- [x] Tag: `v0.6.0-sprint6`
-
-_Sprint 6 closed. Next: Sprint 7 — Self-Service Frontend (US-8.1, US-8.2, 11 pts)_
+## Final Project Sign-off
+- [x] All 15 User Stories (US-1.1 through US-8.2) completed (81 total story points)
+- [x] 76/76 unit tests pass — `pytest`
+- [x] Live Neon PostgreSQL Database connected & schema migrated
+- [x] DB EXPLAIN ANALYZE index optimization verified (263.62x speedup)
+- [x] Final Tag: `v1.0.0-final`
