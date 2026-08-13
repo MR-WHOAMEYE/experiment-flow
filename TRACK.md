@@ -89,3 +89,35 @@
 **Next:**
 - Sprint 2: US-1.2 (API/PostgreSQL/MySQL connectors, 8 pts) → US-2.1 (auto data cleaning, 3 pts).
 - Rewrite TASK.md with US-1.2 breakdown; set US-1.2 to In Progress in BACKLOG.md.
+
+---
+
+## 2026-08-13 — US-1.2 + US-2.1 (Sprint 2 Complete)
+
+**What was done:**
+- Wrote `ingestion/connectors/base.py`: defined `BaseConnector` ABC with `test_connection()` and `fetch()`, plus `ConnectorError`.
+- Wrote `ingestion/connectors/api_connector.py`: REST API data loader using `requests` with status testing, custom headers, and JSON list parsing.
+- Wrote `ingestion/connectors/postgres_connector.py`: PostgreSQL connector using SQLAlchemy Core engine (no ORM overhead).
+- Wrote `ingestion/connectors/mysql_connector.py`: MySQL connector using SQLAlchemy Core + `pymysql`.
+- Wrote `cleaning/cleaner.py`: pure transformation module implementing:
+  1. Exact duplicate row removal
+  2. HTML tag (`<[^>]+>`) & Unicode emoji stripping on object/string columns
+  3. Dropping high-sparsity columns (>50% missing values)
+  4. Imputing remaining missing values (numeric -> median, categorical -> mode)
+  5. Returning `(cleaned_df, CleaningReport)` with structured audit trail metrics.
+- TDD: written `tests/test_connectors.py` (13 tests) and `tests/test_cleaner.py` (11 tests).
+- Updated `.env` with live PostgreSQL database URL (`neondb` on AWS Neon).
+- Ran `pytest`: 45/45 PASSED across all test files.
+- Ran coverage: `ingestion/` & `cleaning/` **95%** overall.
+- Tagged `v0.2.0-sprint2`.
+- Updated BACKLOG.md: US-1.2, US-2.1 -> Done.
+
+**Decisions made:**
+- Connectors derive from `BaseConnector` ABC and return DataFrames directly so they plug seamlessly into `cleaning/cleaner.py` and `upsert_to_clean_records()`.
+- Data cleaner is pure and stateless (no DB dependencies); audit trail captured via `CleaningReport` dataclass.
+- Deduplication occurs before missing value imputation to ensure accurate frequency counts for mode calculation.
+
+**Blockers:** None.
+
+**Next:**
+- Sprint 3: US-3.1 (DB indexing & query benchmarks, 5 pts).

@@ -9,7 +9,7 @@ dist/
 build/
 .eggs/
 *.egg
-
+.agents/
 # Virtual environments
 .venv/
 venv/
@@ -47,3 +47,5 @@ Thumbs.db
 
 # n8n local data (docker volume — not committed)
 n8n_data/
+
+graphify-out/

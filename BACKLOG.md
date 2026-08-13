@@ -10,7 +10,7 @@
 | Story | Title | Points | Status | Notes |
 |-------|-------|--------|--------|-------|
 | US-1.1 | Upload CSV / Excel file | 5 | Done | |
-| US-1.2 | Connect API / PostgreSQL / MySQL source | 8 | Not Started | |
+| US-1.2 | Connect API / PostgreSQL / MySQL source | 8 | Done | |
 | US-1.3 | Re-upload without creating duplicates (upsert) | 5 | Done | Depends on US-1.1 |
 
 ---
@@ -19,7 +19,7 @@
 
 | Story | Title | Points | Status | Notes |
 |-------|-------|--------|--------|-------|
-| US-2.1 | Automatic data cleaning before analysis | 3 | Not Started | Depends on US-1.1 |
+| US-2.1 | Automatic data cleaning before analysis | 3 | Done | Depends on US-1.1 |
 
 ---
 
@@ -88,4 +88,5 @@
 | Sprint 6 | US-6.1, US-6.2, US-7.1 | 13 | Dashboard + n8n automation |
 | Sprint 7 | US-8.1, US-8.2 | 11 | Self-service frontend |
 | **Total** | | **~81 pts** | |
+
 

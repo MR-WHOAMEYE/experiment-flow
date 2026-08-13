@@ -65,3 +65,23 @@
 
 ### One Concrete Change for Next Sprint
 - **Sprint 2**: All `.env.example` env vars needed for new connectors must be identified and added BEFORE writing any connector code — not discovered mid-implementation. This avoids the credential-handling being an afterthought.
+
+---
+
+## Sprint 2 Retrospective — 2026-08-13
+
+**Sprint Goal:** Users can connect API/PostgreSQL/MySQL sources; all ingested data is automatically cleaned before analysis.
+**Stories Completed:** US-1.2 (8 pts), US-2.1 (3 pts) — 11/11 pts
+**Stories Carried Over:** None
+
+### What Went Well
+- Pure component architecture: `cleaner.py` operates directly on DataFrames, making it 100% testable without DB mocks.
+- `BaseConnector` standard interface made adding API, PostgreSQL, and MySQL connectors straightforward.
+- Overall code coverage reached 95% across `ingestion` and `cleaning`.
+- All 45 unit tests passed.
+
+### What Didn't Go Well
+- In `test_cleaner.py`, testing single-column DataFrame deduplication required explicit `id` column assignment so deduplication didn't shrink row indices unexpectedly before mode assertion.
+
+### One Concrete Change for Next Sprint
+- **Sprint 3**: When benchmarking DB queries (EXPLAIN ANALYZE per ADR-003), ensure both indexed and unindexed table states are clean and isolated so benchmark timing measurements in `query_benchmarks` are accurate.
