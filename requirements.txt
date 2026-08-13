@@ -1,0 +1,45 @@
+﻿# ============================================================
+# EaaS Platform — Python Dependencies
+# Python 3.11+ required.
+# Install: pip install -r requirements.txt
+# ============================================================
+
+# --- Database ---
+psycopg2-binary==2.9.9
+SQLAlchemy==2.0.31
+PyMySQL==1.1.1           # MySQL connector
+
+# --- Data processing ---
+pandas==2.2.2
+openpyxl==3.1.5          # Excel (.xlsx) support for pandas
+numpy==1.26.4
+
+# --- Statistics & ML ---
+scipy==1.14.0
+statsmodels==0.14.2
+scikit-learn==1.5.1
+joblib==1.4.2            # Model serialization (used by scikit-learn)
+
+# --- Config & settings ---
+pydantic-settings==2.3.4
+pydantic==2.8.2
+python-dotenv==1.0.1
+
+# --- Encryption (connector credentials) ---
+cryptography==42.0.8
+
+# --- HTTP (API connector) ---
+requests==2.32.3
+
+# --- Frontend ---
+streamlit==1.37.0
+plotly==5.23.0           # Charts in dashboard
+
+# --- Testing ---
+pytest==8.3.2
+pytest-cov==5.0.0
+pytest-mock==3.14.0
+responses==0.25.3        # HTTP mocking for API connector tests
+
+# --- Logging ---
+python-json-logger==2.0.7
