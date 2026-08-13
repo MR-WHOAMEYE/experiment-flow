@@ -4,15 +4,15 @@
 
 ---
 
-## Sprint 5 — ML Prediction Module ✅ COMPLETE
+## Sprint 6 — Dashboard + n8n Automation ✅ COMPLETE
 
 | Field | Value |
 |-------|-------|
-| **Sprint Goal** | Users can train ML models (Regression / Classification) on user-selected target columns; models auto-retrain when new dataset rows arrive, saving artifacts to disk and metadata to `predictions`. |
+| **Sprint Goal** | Interactive Streamlit dashboard displays descriptive stats, A/B experiment charts, ML metrics, and query benchmarks; automated end-to-end pipeline runner supports scheduled execution. |
 | **Start Date** | 2026-08-13 |
 | **End Date** | 2026-08-13 |
 | **Total Points** | 13 |
-| **Git Tag** | `v0.5.0-sprint5` |
+| **Git Tag** | `v0.6.0-sprint6` |
 
 ---
 
@@ -20,32 +20,37 @@
 
 | Story | Title | Points | Status |
 |-------|-------|--------|--------|
-| US-5.1 | Train model on user-selected target column | 8 | ✅ Done |
-| US-5.2 | Auto-retrain model when new data arrives | 5 | ✅ Done |
+| US-6.1 | Descriptive stats view | 5 | ✅ Done |
+| US-6.2 | Experiment & prediction results view | 3 | ✅ Done |
+| US-7.1 | Scheduled full pipeline (n8n cron / CLI runner) | 5 | ✅ Done |
 
 ---
 
 ## Story Checklist
 
-### US-5.1 — ML Model Training
-- [x] `ml/trainer.py` — `train_model()`, model type detection (regression vs classification), feature preprocessing, metrics (RMSE/R2, Accuracy/F1), model serialization (`joblib`)
-- [x] `ml/predictor.py` — `predict()` loads saved model artifact and computes predictions
-- [x] `tests/test_ml_trainer.py` — 4 unit tests for training, metrics, saving, and predicting
+### US-6.1 — Descriptive Stats Dashboard
+- [x] `dashboard/stats.py` — `compute_summary_stats()` helper & Streamlit metrics view
+- [x] `tests/test_dashboard_stats.py` — 2 unit tests for stats calculation & summary table formatting
 
-### US-5.2 — Auto-Retraining Trigger
-- [x] `ml/retrainer.py` — `auto_retrain_if_needed()` triggers retraining when dataset row count increases
-- [x] `tests/test_ml_retrainer.py` — 2 unit tests for auto-retrain workflow & DB metadata update
-- [x] 64/64 total tests PASSED | overall coverage: 93%
+### US-6.2 — Results Dashboard (Experiments & ML)
+- [x] `dashboard/results.py` — A/B experiment charts, ML metrics display, and query benchmark plots
+- [x] `dashboard/app.py` — Main Streamlit navigation app (Descriptive Stats, A/B Experiments, ML Predictions, Benchmarks)
+- [x] `tests/test_dashboard_results.py` — 4 unit tests for DB data loading & Plotly figure generation
+
+### US-7.1 — Automated Full Pipeline Runner
+- [x] `scripts/run_pipeline.py` — CLI & n8n webhook runner executing Ingestion -> Cleaning -> Upsert -> A/B Experiment -> ML Retrain sequentially
+- [x] `tests/test_pipeline_runner.py` — 1 unit test for full automated pipeline execution
+- [x] 71/71 total tests PASSED | overall coverage: 93%
 
 ---
 
 ## Sign-off
-- [x] 64/64 tests pass — `pytest`
-- [x] Coverage: `ml/` **97%** (threshold: 70%)
-- [x] Gherkin ACs verified
-- [x] BACKLOG.md: US-5.1, US-5.2 → Done
+- [x] 71/71 tests pass — `pytest`
+- [x] Coverage: `dashboard/` **97%** (threshold: 70%)
+- [x] Streamlit dashboard app ready (`streamlit run dashboard/app.py`)
+- [x] BACKLOG.md: US-6.1, US-6.2, US-7.1 → Done
 - [x] TRACK.md entry appended
-- [x] RETRO.md Sprint 5 entry written
-- [x] Tag: `v0.5.0-sprint5`
+- [x] RETRO.md Sprint 6 entry written
+- [x] Tag: `v0.6.0-sprint6`
 
-_Sprint 5 closed. Next: Sprint 6 — Dashboard + n8n Automation (US-6.1, US-6.2, US-7.1, 13 pts)_
+_Sprint 6 closed. Next: Sprint 7 — Self-Service Frontend (US-8.1, US-8.2, 11 pts)_

@@ -142,3 +142,22 @@
 
 ### One Concrete Change for Next Sprint
 - **Sprint 6**: Streamlit dashboard components (`dashboard/`) should read cleanly from DB tables (`clean_records`, `experiments`, `predictions`, `query_benchmarks`) with caching to ensure fast UI rendering.
+
+---
+
+## Sprint 6 Retrospective — 2026-08-13
+
+**Sprint Goal:** Interactive Streamlit dashboard displays descriptive stats, A/B experiment charts, ML metrics, and query benchmarks; automated end-to-end pipeline runner supports scheduled execution.
+**Stories Completed:** US-6.1 (5 pts), US-6.2 (3 pts), US-7.1 (5 pts) — 13/13 pts
+**Stories Carried Over:** None
+
+### What Went Well
+- Streamlit and Plotly components render cleanly and read directly from PostgreSQL DB views.
+- `run_end_to_end_pipeline()` provides a single function call for n8n webhooks or cron tasks.
+- 71/71 unit tests passing with 93% code coverage.
+
+### What Didn't Go Well
+- None.
+
+### One Concrete Change for Next Sprint
+- **Sprint 7**: Integrate interactive Streamlit form components in `dashboard/app.py` for US-8.1/US-8.2 self-service experiment creation and natural-language narrative generation.

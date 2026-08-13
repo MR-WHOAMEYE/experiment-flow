@@ -195,3 +195,29 @@
 
 **Next:**
 - Sprint 6: US-6.1 (Descriptive stats view), US-6.2 (Experiment & prediction results view), US-7.1 (n8n automation workflow).
+
+---
+
+## 2026-08-13 — US-6.1 + US-6.2 + US-7.1 (Sprint 6 Complete)
+
+**What was done:**
+- Wrote `dashboard/stats.py`: `compute_summary_stats()` generating mean, std, min, median, max, and missing counts for DataFrame columns.
+- Wrote `dashboard/results.py`: SQL loaders and Plotly interactive chart builders for A/B experiment p-values and database query benchmark performance.
+- Wrote `dashboard/app.py`: Streamlit dashboard application with sidebar radio navigation across 4 views:
+  1. 📊 Descriptive Statistics
+  2. 🧪 A/B Testing Results
+  3. 🤖 ML Model Predictions
+  4. ⚡ DB Query Benchmarks
+- Wrote `scripts/run_pipeline.py`: `run_end_to_end_pipeline()` orchestrating ingest -> clean -> upsert -> A/B test -> ML model train sequentially. Supports CLI execution for n8n cron triggers.
+- Wrote `tests/test_dashboard_stats.py` (2 tests), `tests/test_dashboard_results.py` (4 tests), `tests/test_pipeline_runner.py` (1 test).
+- Ran `pytest`: 71/71 PASSED. Overall coverage: **93%**.
+- Tagged `v0.6.0-sprint6`.
+- Updated BACKLOG.md: US-6.1, US-6.2, US-7.1 -> Done.
+
+**Decisions made:**
+- Streamlit application uses parameterised SQL queries against `get_connection()` context manager to keep DB access clean and injection-safe.
+
+**Blockers:** None.
+
+**Next:**
+- Sprint 7: US-8.1 (Form-driven experiment creation, 8 pts) & US-8.2 (Plain-language results summary, 3 pts).

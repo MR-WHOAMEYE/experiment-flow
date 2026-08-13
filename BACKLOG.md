@@ -53,8 +53,8 @@
 
 | Story | Title | Points | Status | Notes |
 |-------|-------|--------|--------|-------|
-| US-6.1 | Descriptive stats view | 5 | Not Started | Depends on US-2.1 |
-| US-6.2 | Experiment & prediction results view | 3 | Not Started | Depends on US-4.2, US-5.1 |
+| US-6.1 | Descriptive stats view | 5 | Done | Depends on US-2.1 |
+| US-6.2 | Experiment & prediction results view | 3 | Done | Depends on US-4.2, US-5.1 |
 
 ---
 
@@ -62,7 +62,7 @@
 
 | Story | Title | Points | Status | Notes |
 |-------|-------|--------|--------|-------|
-| US-7.1 | Scheduled full pipeline (n8n cron) | 5 | Not Started | Depends on US-2.1, US-4.2, US-5.1 |
+| US-7.1 | Scheduled full pipeline (n8n cron) | 5 | Done | Depends on US-2.1, US-4.2, US-5.1 |
 
 ---
 
@@ -88,6 +88,8 @@
 | Sprint 6 | US-6.1, US-6.2, US-7.1 | 13 | Dashboard + n8n automation |
 | Sprint 7 | US-8.1, US-8.2 | 11 | Self-service frontend |
 | **Total** | | **~81 pts** | |
+
+
 
 
 
