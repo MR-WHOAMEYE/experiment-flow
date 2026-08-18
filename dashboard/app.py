@@ -1,230 +1,322 @@
 """
-EaaS Platform Streamlit Dashboard -- US-6.1, US-6.2, US-8.1, US-8.2
+EaaS Platform — Streamlit Multi-Page App Entry Point (Sprint 9 UI Redesign)
 
-Launch with: streamlit run dashboard/app.py
+Launch with:
+    streamlit run dashboard/app.py
+
+Architecture:
+    This file is the sole entry point.  It handles:
+      - sys.path fix (single place, before any local imports)
+      - st.set_page_config  (must be first Streamlit call)
+      - Global CSS injection (Inter font, dark theme, glassmorphism)
+      - Page registry: st.navigation() + st.Page() with callable pages
+      - Session-state page-reference dict so any page can call st.switch_page()
 """
-import json
-import os
 import sys
 from pathlib import Path
-import pandas as pd
-import streamlit as st
-from sqlalchemy import text
 
-# Ensure repository root is on sys.path when running via `streamlit run dashboard/app.py`
+import streamlit as st
+
+# ── sys.path fix — keep here; must be BEFORE any local imports ───────────────
 ROOT_DIR = Path(__file__).resolve().parent.parent
 if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
 
-from db.connection import get_connection
-from dashboard.stats import compute_summary_stats
-from dashboard.results import (
-    load_experiments_summary,
-    load_predictions_summary,
-    load_benchmarks_summary,
-    create_ab_pvalue_chart,
-    create_benchmark_chart,
-)
-from dashboard.narrative import generate_ab_narrative, generate_ml_narrative
-from ab_testing.config import ExperimentConfig
-from ab_testing.engine import evaluate_experiment, save_experiment_result
-from ml.trainer import train_model, save_prediction_metadata
-
-st.set_page_config(page_title="EaaS Analytics Platform", layout="wide", page_icon="??")
-
-st.title("?? EaaS (Experiment-as-a-Service) Analytics Platform")
-st.markdown("### Self-Service Data Ingestion, A/B Testing & Machine Learning Dashboard")
-
-st.sidebar.header("Navigation")
-page = st.sidebar.radio(
-    "Select View",
-    [
-        "?? Descriptive Statistics",
-        "?? A/B Testing Results",
-        "? Create A/B Experiment",
-        "?? ML Model Predictions",
-        "? DB Query Benchmarks"
-    ]
+# ── Local page modules ────────────────────────────────────────────────────────
+from dashboard.pages import (  # noqa: E402
+    home,
+    create_experiment,
+    results_dashboard,
+    history,
+    settings,
 )
 
-# ---------------------------------------------------------------------------
-# Page 1: Descriptive Statistics (US-6.1)
-# ---------------------------------------------------------------------------
-if page == "?? Descriptive Statistics":
-    st.header("?? Dataset Descriptive Statistics (US-6.1)")
+# ─────────────────────────────────────────────────────────────────────────────
+# App config  (must be the very first Streamlit call)
+# ─────────────────────────────────────────────────────────────────────────────
+st.set_page_config(
+    page_title="Experiment Flow",
+    page_icon="🔬",
+    layout="wide",
+    initial_sidebar_state="expanded",
+)
 
-    try:
-        with get_connection() as conn:
-            query = text("SELECT DISTINCT dataset_id FROM clean_records")
-            dataset_ids = [r[0] for r in conn.execute(query).fetchall()]
+# ─────────────────────────────────────────────────────────────────────────────
+# Global CSS — dark theme, Inter font, glassmorphism cards
+# ─────────────────────────────────────────────────────────────────────────────
+_CSS = """
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap');
 
-        if not dataset_ids:
-            st.info("No records found in clean_records. Upload a CSV/Excel file or run a connector first.")
-        else:
-            selected_dataset = st.selectbox("Select Dataset ID", dataset_ids)
-            with get_connection() as conn:
-                res = conn.execute(text("SELECT fields FROM clean_records WHERE dataset_id = :ds"), {"ds": selected_dataset})
-                rows = [json.loads(r[0]) for r in res.fetchall()]
+/* ── Base ── */
+html, body, [class*="css"] {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+}
+.stApp {
+    background: #0a0e1a !important;
+}
+/* Hide default Streamlit chrome */
+#MainMenu { visibility: hidden; }
+footer    { visibility: hidden; }
 
-            df_clean = pd.DataFrame(rows)
-            st.subheader(f"Summary Metrics for Dataset: `{selected_dataset}` ({len(df_clean)} rows)")
+/* ── Sidebar ── */
+[data-testid="stSidebar"] {
+    background: #0d1326 !important;
+    border-right: 1px solid rgba(255,255,255,0.06) !important;
+}
+[data-testid="stSidebarNavLink"] {
+    color: #64748b !important;
+    border-radius: 8px !important;
+    margin: 2px 8px !important;
+    padding: 8px 12px !important;
+    font-weight: 500 !important;
+    transition: all 0.2s ease !important;
+}
+[data-testid="stSidebarNavLink"]:hover {
+    background: rgba(99,102,241,0.12) !important;
+    color: #818cf8 !important;
+}
+[data-testid="stSidebarNavLink"][aria-current="page"] {
+    background: rgba(99,102,241,0.18) !important;
+    color: #a5b4fc !important;
+    border-left: 3px solid #6366f1 !important;
+}
+[data-testid="stSidebarHeader"] {
+    padding: 20px 16px 8px !important;
+    font-weight: 700 !important;
+    font-size: 1.1rem !important;
+    color: #e2e8f0 !important;
+    letter-spacing: 0.01em !important;
+}
 
-            stats_df = compute_summary_stats(df_clean)
-            st.dataframe(stats_df, use_container_width=True)
+/* ── Typography ── */
+h1, h2, h3, h4, h5, h6,
+.stMarkdown h1, .stMarkdown h2, .stMarkdown h3 {
+    color: #e2e8f0 !important;
+    letter-spacing: -0.01em !important;
+}
+p, li, .stMarkdown p { color: #cbd5e1 !important; }
+code { color: #a5b4fc !important; background: rgba(99,102,241,0.12) !important;
+       border-radius: 4px !important; padding: 1px 5px !important; }
 
-            st.subheader("Raw Data Sample")
-            st.dataframe(df_clean.head(50), use_container_width=True)
-    except Exception as exc:
-        st.warning(f"Database connection error or no data: {exc}")
+/* ── Divider ── */
+hr { border-color: rgba(255,255,255,0.07) !important; }
 
-# ---------------------------------------------------------------------------
-# Page 2: A/B Testing Results & Plain Language Summaries (US-6.2, US-8.2)
-# ---------------------------------------------------------------------------
-elif page == "?? A/B Testing Results":
-    st.header("?? A/B Experiment Results & Plain-Language Summaries (US-6.2, US-8.2)")
+/* ── Input widgets ── */
+.stTextInput > div > div > input,
+.stTextArea > div > div > textarea,
+.stSelectbox > div > div,
+.stMultiselect > div > div {
+    background: rgba(255,255,255,0.04) !important;
+    border: 1px solid rgba(255,255,255,0.1) !important;
+    color: #e2e8f0 !important;
+    border-radius: 10px !important;
+}
+.stTextInput > div > div > input:focus,
+.stTextArea > div > div > textarea:focus {
+    border-color: #6366f1 !important;
+    box-shadow: 0 0 0 3px rgba(99,102,241,0.15) !important;
+}
+label, .stRadio label, .stCheckbox label { color: #94a3b8 !important; }
 
-    try:
-        with get_connection() as conn:
-            exp_df = load_experiments_summary(conn)
+/* ── Buttons ── */
+.stButton > button {
+    border-radius: 10px !important;
+    font-weight: 600 !important;
+    font-family: 'Inter', sans-serif !important;
+    transition: all 0.2s ease !important;
+    border: 1px solid rgba(255,255,255,0.1) !important;
+    background: rgba(255,255,255,0.05) !important;
+    color: #e2e8f0 !important;
+}
+.stButton > button:hover {
+    border-color: rgba(99,102,241,0.4) !important;
+    background: rgba(99,102,241,0.08) !important;
+    color: #a5b4fc !important;
+    transform: translateY(-1px) !important;
+}
+.stButton > button[kind="primary"] {
+    background: linear-gradient(135deg, #6366f1, #818cf8) !important;
+    border: none !important;
+    color: white !important;
+    box-shadow: 0 4px 15px rgba(99,102,241,0.35) !important;
+}
+.stButton > button[kind="primary"]:hover {
+    background: linear-gradient(135deg, #4f46e5, #6366f1) !important;
+    box-shadow: 0 6px 20px rgba(99,102,241,0.45) !important;
+    color: white !important;
+    transform: translateY(-2px) !important;
+}
 
-        if exp_df.empty:
-            st.info("No A/B experiments recorded yet. Use 'Create A/B Experiment' tab to launch one.")
-        else:
-            fig = create_ab_pvalue_chart(exp_df)
-            st.plotly_chart(fig, use_container_width=True)
+/* ── DataFrames / Tables ── */
+.stDataFrame { border-radius: 12px !important; overflow: hidden !important; }
+.stDataFrame > div { background: rgba(255,255,255,0.03) !important; }
+thead tr th { background: rgba(99,102,241,0.1) !important; color: #a5b4fc !important; }
+tbody tr { background: rgba(255,255,255,0.02) !important; }
+tbody tr:hover { background: rgba(99,102,241,0.06) !important; }
+tbody tr td { color: #cbd5e1 !important; }
 
-            st.subheader("Plain-Language Results Summaries (US-8.2)")
-            for _idx, row in exp_df.iterrows():
-                with st.expander(f"Experiment: {row['name']} (p = {row['p_value']:.4f})"):
-                    summary_dict = json.loads(row["summary"]) if isinstance(row["summary"], str) else (row["summary"] or {})
-                    narrative_text = generate_ab_narrative(
-                        experiment_name=row["name"],
-                        variant_col=row["variant_column"],
-                        metric_col=row["metric_column"],
-                        p_value=float(row["p_value"]),
-                        is_significant=bool(row["is_significant"]),
-                        effect_size=float(row["effect_size"]),
-                        test_type=summary_dict.get("test_type", "t-test"),
-                        summary_stats=summary_dict.get("summary_stats"),
-                    )
-                    st.markdown(narrative_text)
+/* ── Alerts ── */
+.stAlert {
+    border-radius: 12px !important;
+    border: 1px solid rgba(255,255,255,0.08) !important;
+}
+[data-testid="stNotificationContentInfo"]    { background: rgba(6,182,212,0.08)  !important; }
+[data-testid="stNotificationContentSuccess"] { background: rgba(16,185,129,0.08) !important; }
+[data-testid="stNotificationContentWarning"] { background: rgba(245,158,11,0.08) !important; }
+[data-testid="stNotificationContentError"]   { background: rgba(244,63,94,0.08)  !important; }
 
-            st.subheader("Completed Experiments Table")
-            st.dataframe(exp_df, use_container_width=True)
-    except Exception as exc:
-        st.warning(f"Error loading experiment results: {exc}")
+/* ── Expander ── */
+.streamlit-expanderHeader {
+    background: rgba(255,255,255,0.03) !important;
+    border-radius: 10px !important;
+    color: #94a3b8 !important;
+}
 
-# ---------------------------------------------------------------------------
-# Page 3: Interactive A/B Experiment Creation (US-8.1)
-# ---------------------------------------------------------------------------
-elif page == "? Create A/B Experiment":
-    st.header("? Form-Driven A/B Experiment Creation (US-8.1)")
-    st.markdown("Configure and execute an A/B experiment without writing code.")
+/* ── Progress bar (file uploader etc.) ── */
+.stProgress > div > div { background: #6366f1 !important; }
 
-    try:
-        with get_connection() as conn:
-            query = text("SELECT DISTINCT dataset_id FROM clean_records")
-            dataset_ids = [r[0] for r in conn.execute(query).fetchall()]
+/* ── Spinner ── */
+.stSpinner > div { border-top-color: #6366f1 !important; }
 
-        if not dataset_ids:
-            st.info("No datasets available. Please upload a dataset first.")
-        else:
-            with st.form("ab_create_form"):
-                selected_ds = st.selectbox("Select Dataset", dataset_ids)
-                exp_name = st.text_input("Experiment Name", value="New A/B Test")
+/* ── Plotly charts ── */
+.js-plotly-plot .plotly { border-radius: 12px !important; }
 
-                # Fetch columns
-                with get_connection() as conn:
-                    res = conn.execute(text("SELECT fields FROM clean_records WHERE dataset_id = :ds LIMIT 10"), {"ds": selected_ds})
-                    rows = [json.loads(r[0]) for r in res.fetchall()]
-                df_sample = pd.DataFrame(rows)
-                all_cols = list(df_sample.columns)
+/* ══════════════════════════════════════════════════
+   Custom component classes used by page modules
+   ══════════════════════════════════════════════════ */
 
-                variant_col = st.selectbox("Variant Column (Group Labels)", all_cols)
-                metric_col = st.selectbox("Metric Column (To Measure)", all_cols)
-                metric_type = st.selectbox("Metric Type", ["numeric", "categorical"])
+/* Hero section */
+@keyframes gradientFlow {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+.hero-section {
+    background: linear-gradient(-45deg, #0f172a, #1e1b4b, #1a1035, #0f172a, #0a0e1a);
+    background-size: 400% 400%;
+    animation: gradientFlow 12s ease infinite;
+    border-radius: 20px;
+    padding: 72px 48px;
+    text-align: center;
+    margin-bottom: 40px;
+    border: 1px solid rgba(99,102,241,0.18);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(99,102,241,0.05);
+}
+.hero-eyebrow {
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #6366f1;
+    margin-bottom: 20px;
+}
+.hero-title {
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    font-weight: 800;
+    line-height: 1.15;
+    margin: 0 0 20px;
+    background: linear-gradient(135deg, #ffffff 30%, #a5b4fc 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+.hero-sub {
+    font-size: 1.1rem;
+    color: rgba(255,255,255,0.55);
+    line-height: 1.6;
+    max-width: 560px;
+    margin: 0 auto 8px;
+}
 
-                submitted = st.form_submit_button("?? Run Experiment")
+/* Glassmorphism card */
+.glass-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 24px 28px;
+    margin-bottom: 16px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
 
-                if submitted:
-                    with get_connection() as conn:
-                        res = conn.execute(text("SELECT fields FROM clean_records WHERE dataset_id = :ds"), {"ds": selected_ds})
-                        df_full = pd.DataFrame([json.loads(r[0]) for r in res.fetchall()])
+/* Metric card */
+.metric-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 14px;
+    padding: 20px 16px;
+    text-align: center;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+.metric-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(99,102,241,0.25);
+}
+.metric-value {
+    font-size: 1.9rem;
+    font-weight: 700;
+    color: #6366f1;
+    line-height: 1.1;
+    margin-bottom: 6px;
+}
+.metric-label {
+    font-size: 0.8rem;
+    color: #64748b;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
 
-                        cfg = ExperimentConfig(
-                            dataset_id=selected_ds,
-                            name=exp_name,
-                            variant_column=variant_col,
-                            metric_column=metric_col,
-                            metric_type=metric_type,
-                        )
-                        eval_res = evaluate_experiment(cfg, df_full)
-                        save_experiment_result(conn, eval_res)
+/* Verdict boxes */
+.verdict-win {
+    background: rgba(16,185,129,0.08);
+    border: 1px solid rgba(16,185,129,0.25);
+    border-radius: 14px;
+    padding: 20px 28px;
+    margin: 16px 0;
+}
+.verdict-lose {
+    background: rgba(244,63,94,0.08);
+    border: 1px solid rgba(244,63,94,0.25);
+    border-radius: 14px;
+    padding: 20px 28px;
+    margin: 16px 0;
+}
+"""
 
-                        st.success(f"Experiment '{exp_name}' executed and saved successfully!")
-                        st.subheader("Instant Plain-Language Summary")
-                        st.markdown(
-                            generate_ab_narrative(
-                                experiment_name=exp_name,
-                                variant_col=variant_col,
-                                metric_col=metric_col,
-                                p_value=eval_res.p_value,
-                                is_significant=eval_res.is_significant,
-                                effect_size=eval_res.effect_size,
-                                test_type=eval_res.test_type,
-                                summary_stats=eval_res.summary_stats,
-                            )
-                        )
-    except Exception as exc:
-        st.error(f"Error executing experiment form: {exc}")
+st.markdown(f"<style>{_CSS}</style>", unsafe_allow_html=True)
 
-# ---------------------------------------------------------------------------
-# Page 4: ML Model Predictions & Summaries (US-6.2, US-8.2)
-# ---------------------------------------------------------------------------
-elif page == "?? ML Model Predictions":
-    st.header("?? ML Model Prediction Registry & Narratives (US-6.2, US-8.2)")
+# ─────────────────────────────────────────────────────────────────────────────
+# Page registry — build once, store in session_state for switch_page()
+# ─────────────────────────────────────────────────────────────────────────────
+_home_page     = st.Page(home.show,                title="Home",              icon="🏠", default=True)
+_create_page   = st.Page(create_experiment.show,   title="Create Experiment", icon="🧪")
+_results_page  = st.Page(results_dashboard.show,   title="Results",           icon="📊")
+_history_page  = st.Page(history.show,             title="History",           icon="📋")
+_settings_page = st.Page(settings.show,            title="Settings",          icon="⚙️")
 
-    try:
-        with get_connection() as conn:
-            pred_df = load_predictions_summary(conn)
+# Make page references available to every page via session_state
+if "pages" not in st.session_state:
+    st.session_state.pages = {
+        "home":     _home_page,
+        "create":   _create_page,
+        "results":  _results_page,
+        "history":  _history_page,
+        "settings": _settings_page,
+    }
 
-        if pred_df.empty:
-            st.info("No trained models recorded in predictions table yet.")
-        else:
-            st.subheader("Model Plain-Language Quality Summaries (US-8.2)")
-            for _idx, row in pred_df.iterrows():
-                metrics_dict = json.loads(row["metrics"]) if isinstance(row["metrics"], str) else (row["metrics"] or {})
-                with st.expander(f"Model: {row['target_column']} ({row['model_type'].upper()})"):
-                    st.markdown(
-                        generate_ml_narrative(
-                            target_col=row["target_column"],
-                            model_type=row["model_type"],
-                            metrics=metrics_dict,
-                        )
-                    )
+# ── Sidebar branding ──────────────────────────────────────────────────────────
+st.sidebar.markdown(
+    "<div style='padding:8px 8px 24px; font-size:1.15rem; font-weight:800;"
+    "color:#e2e8f0; letter-spacing:-0.01em'>🔬 Experiment Flow</div>",
+    unsafe_allow_html=True,
+)
+st.sidebar.caption("EaaS Analytics Platform · v1.1.0")
+st.sidebar.markdown("---")
 
-            st.subheader("Trained Model Artifacts Table")
-            st.dataframe(pred_df, use_container_width=True)
-    except Exception as exc:
-        st.warning(f"Error loading predictions: {exc}")
-
-# ---------------------------------------------------------------------------
-# Page 5: DB Query Benchmarks (US-3.1)
-# ---------------------------------------------------------------------------
-elif page == "? DB Query Benchmarks":
-    st.header("? Database Query Performance Benchmarks (US-3.1)")
-
-    try:
-        with get_connection() as conn:
-            bench_df = load_benchmarks_summary(conn)
-
-        if bench_df.empty:
-            st.info("No query benchmarks recorded yet. Run `python scripts/seed_and_benchmark.py` to populate.")
-        else:
-            fig = create_benchmark_chart(bench_df)
-            st.plotly_chart(fig, use_container_width=True)
-
-            st.subheader("EXPLAIN ANALYZE Benchmark Records")
-            st.dataframe(bench_df, use_container_width=True)
-    except Exception as exc:
-        st.warning(f"Error loading benchmarks: {exc}")
+# ── Navigation ────────────────────────────────────────────────────────────────
+pg = st.navigation(
+    [_home_page, _create_page, _results_page, _history_page, _settings_page],
+    position="sidebar",
+)
+pg.run()
