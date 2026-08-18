@@ -76,11 +76,23 @@
 
 ---
 
-## Post-Release Extensions (Sprint 8 — after v1.0.0-final)
+## Post-Release Extensions
+
+### Sprint 8 — Firecrawl Web Scraping
 
 | Story | Title | Points | Status | Notes |
 |-------|-------|--------|--------|-------|
 | US-1.4 | Firecrawl web scraping connector | 3 | Done | `ingestion/connectors/firecrawl_connector.py`; 17/17 tests |
+
+### Sprint 9 — Full UI Redesign (5-Page Multi-Page App)
+
+| Story | Title | Points | Status | Notes |
+|-------|-------|--------|--------|-------|
+| US-9.1 | Home page — hero, CTA, recent experiments table | 3 | In Progress | Depends on US-8.1, US-8.2 |
+| US-9.2 | Create Experiment — 4-step wizard (data source → analysis → configure → review) | 8 | In Progress | Depends on US-1.1, US-1.2, US-4.1, US-5.1 |
+| US-9.3 | Results Dashboard — plain-language verdict, Plotly charts, diagnostics | 5 | In Progress | Depends on US-8.2, US-9.2 |
+| US-9.4 | Experiment History — searchable table, pagination, clone action | 3 | In Progress | Depends on US-9.1 |
+| US-9.5 | Settings page — placeholder with future config items | 1 | In Progress | Standalone |
 
 ---
 
@@ -97,6 +109,7 @@
 | Sprint 6 | US-6.1, US-6.2, US-7.1 | 13 | Dashboard + n8n automation |
 | Sprint 7 | US-8.1, US-8.2 | 11 | Self-service frontend |
 | Sprint 8 | US-1.4 | 3 | Post-release: Firecrawl web scraping |
-| **Total** | | **~84 pts** | |
+| Sprint 9 | US-9.1 – US-9.5 | 20 | Full UI redesign — 5-page multi-page Streamlit app |
+| **Total** | | **~104 pts** | |
 
 
