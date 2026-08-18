@@ -5,9 +5,16 @@ Launch with: streamlit run dashboard/app.py
 """
 import json
 import os
+import sys
+from pathlib import Path
 import pandas as pd
 import streamlit as st
 from sqlalchemy import text
+
+# Ensure repository root is on sys.path when running via `streamlit run dashboard/app.py`
+ROOT_DIR = Path(__file__).resolve().parent.parent
+if str(ROOT_DIR) not in sys.path:
+    sys.path.insert(0, str(ROOT_DIR))
 
 from db.connection import get_connection
 from dashboard.stats import compute_summary_stats
