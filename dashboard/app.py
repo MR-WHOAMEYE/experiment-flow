@@ -289,11 +289,11 @@ st.markdown(f"<style>{_CSS}</style>", unsafe_allow_html=True)
 # ─────────────────────────────────────────────────────────────────────────────
 # Page registry — build once, store in session_state for switch_page()
 # ─────────────────────────────────────────────────────────────────────────────
-_home_page     = st.Page(home.show,                title="Home",              icon="🏠", default=True)
-_create_page   = st.Page(create_experiment.show,   title="Create Experiment", icon="🧪")
-_results_page  = st.Page(results_dashboard.show,   title="Results",           icon="📊")
-_history_page  = st.Page(history.show,             title="History",           icon="📋")
-_settings_page = st.Page(settings.show,            title="Settings",          icon="⚙️")
+_home_page     = st.Page(home.show,                title="Home",              icon="🏠", default=True,  url_path="home")
+_create_page   = st.Page(create_experiment.show,   title="Create Experiment", icon="🧪",                url_path="create")
+_results_page  = st.Page(results_dashboard.show,   title="Results",           icon="📊",                url_path="results")
+_history_page  = st.Page(history.show,             title="History",           icon="📋",                url_path="history")
+_settings_page = st.Page(settings.show,            title="Settings",          icon="⚙️",                url_path="settings")
 
 # Make page references available to every page via session_state
 if "pages" not in st.session_state:
