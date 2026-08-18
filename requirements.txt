@@ -1,4 +1,4 @@
-﻿# ============================================================
+# ============================================================
 # EaaS Platform — Python Dependencies
 # Python 3.11+ required.
 # Install: pip install -r requirements.txt
@@ -28,8 +28,9 @@ python-dotenv==1.0.1
 # --- Encryption (connector credentials) ---
 cryptography==42.0.8
 
-# --- HTTP (API connector) ---
+# --- HTTP (API connector + web scraping) ---
 requests==2.32.3
+firecrawl-py==1.7.0       # Firecrawl web scraping connector
 
 # --- Frontend ---
 streamlit==1.37.0
