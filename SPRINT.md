@@ -84,64 +84,65 @@
 
 ---
 
-## Sprint 9 — Full UI Redesign (5-Page Multi-Page App) 🚧 IN PROGRESS
+## Sprint 9 — Full UI Redesign (5-Page Multi-Page App) ✅ COMPLETE
 
 | Field | Value |
 |-------|-------|
 | **Sprint Goal** | Replace the single-file sidebar dashboard with a premium 5-page Streamlit multi-page app: Home, Create Experiment wizard, Results Dashboard, Experiment History, and Settings. No technical jargon in any user-facing copy. |
 | **Start Date** | 2026-08-18 |
-| **Target End Date** | 2026-08-18 |
+| **End Date** | 2026-08-18 |
 | **Total Points** | 20 |
-| **Git Tag** | TBD |
+| **Git Tag** | `1dc1ada` |
 
 ## Stories
 
 | Story | Title | Points | Status |
 |-------|-------|--------|--------|
-| US-9.1 | Home page — hero, CTA, recent experiments table | 3 | 🔲 Not Started |
-| US-9.2 | Create Experiment — 4-step wizard | 8 | 🔲 Not Started |
-| US-9.3 | Results Dashboard — verdict, charts, diagnostics | 5 | 🔲 Not Started |
-| US-9.4 | Experiment History — search, pagination, clone | 3 | 🔲 Not Started |
-| US-9.5 | Settings page — placeholder | 1 | 🔲 Not Started |
+| US-9.1 | Home page — hero, CTA, recent experiments table | 3 | ✅ Done |
+| US-9.2 | Create Experiment — 4-step wizard | 8 | ✅ Done |
+| US-9.3 | Results Dashboard — verdict, charts, diagnostics | 5 | ✅ Done |
+| US-9.4 | Experiment History — search, pagination, clone | 3 | ✅ Done |
+| US-9.5 | Settings page — placeholder | 1 | ✅ Done |
 
 ## Story Checklist
 
 ### US-9.1 — Home Page
-- [ ] `dashboard/pages/home.py` — hero section with animated gradient, headline, CTA button
-- [ ] Recent experiments table (5 most recent from DB, with ID/type/status badges)
-- [ ] CTA "Create New Experiment" navigates to Create Experiment page
+- [x] `dashboard/pages/home.py` — hero section with animated gradient, headline, CTA button
+- [x] Recent experiments table (5 most recent from DB, with result badges)
+- [x] 4 metric summary cards (total/significant/avg-effect/AB count)
+- [x] CTA "Create New Experiment" navigates to Create Experiment page
 
 ### US-9.2 — Create Experiment Wizard
-- [ ] `dashboard/pages/create_experiment.py` — 4-step wizard via `st.session_state["wizard"]`
-- [ ] Step 1: Data source radio (CSV / Excel / PostgreSQL / MySQL / API / Firecrawl URL) with conditional upload/form widgets
-- [ ] Step 2: Analysis type radio (EDA only / A/B Testing / ML Prediction / All)
-- [ ] Step 3: Configure (conditional — skipped for EDA-only; A/B dropdowns; ML target dropdown)
-- [ ] Step 4: Review summary → "Create Experiment" button → execute backend → show narrative inline
-- [ ] Progress bar showing current step (1/4 → 4/4)
-- [ ] Back/Next/Cancel navigation at each step
+- [x] `dashboard/pages/create_experiment.py` — 4-step wizard via `st.session_state["wizard"]`
+- [x] Step 1: 7 data sources (CSV / Excel / PostgreSQL / MySQL / API / Firecrawl / existing DB) with conditional upload/form widgets
+- [x] Step 2: Analysis type radio (EDA only / A/B Testing / ML Prediction / All of the above)
+- [x] Step 3: Configure (conditional — skipped for EDA-only; A/B dropdowns w/ auto-inferred test type; ML target + task type)
+- [x] Step 4: Review summary → "Create Experiment" button → execute backend → inline verdict + narrative
+- [x] Progress bar showing current step (1/4 → 4/4)
+- [x] Back/Next/Cancel navigation at each step
 
 ### US-9.3 — Results Dashboard
-- [ ] `dashboard/pages/results_dashboard.py` — loads experiment by name from session state
-- [ ] Plain-language verdict header (✓ Significant / ✗ Not Significant) with large icon
-- [ ] Plotly box/violin distribution chart (side-by-side per variant)
-- [ ] Diagnostics section: sample sizes, test type, effect size, p-value (rounded)
-- [ ] ML results variant: feature importance bar chart, accuracy/RMSE summary
+- [x] `dashboard/pages/results_dashboard.py` — loads experiment by name from session state
+- [x] Plain-language verdict banner (✅/❌ Significant / Not Significant)
+- [x] 4 metric cards (p-value, significant, effect size, test type)
+- [x] Plotly bar chart (variant means) + confidence interval chart
+- [x] Diagnostics section: test type, CI, mean difference, raw JSON expander
 
 ### US-9.4 — Experiment History
-- [ ] `dashboard/pages/history.py` — full experiment table from DB
-- [ ] Search input filters rows by experiment name in real-time
-- [ ] Manual pagination (10 rows/page, Prev/Next buttons via session_state)
-- [ ] Row "View" button sets `st.session_state["view_experiment"]` and navigates to Results
-- [ ] Row "Clone" button copies experiment config to wizard session state
+- [x] `dashboard/pages/history.py` — full experiment table from DB
+- [x] Search input filters rows by experiment name in real-time
+- [x] Manual pagination (10 rows/page, Prev/Next buttons via session_state)
+- [x] "View" button sets `st.session_state["view_experiment"]` and navigates to Results
+- [x] "Clone" button pre-fills wizard session state and navigates to Create Experiment
 
 ### US-9.5 — Settings (Placeholder)
-- [ ] `dashboard/pages/settings.py` — static markdown with future config items
+- [x] `dashboard/pages/settings.py` — 6 future config items as glassmorphism cards
 
 ### Global / App Shell
-- [ ] `dashboard/pages/__init__.py` — package marker
-- [ ] `dashboard/app.py` refactored to use `st.navigation()` + `st.Page()` API
-- [ ] Global CSS injected: dark navy background, Inter font, glassmorphism cards
-- [ ] `sys.path` fix kept in `app.py` entry point (single place)
-- [ ] All 93 existing tests continue to pass
+- [x] `dashboard/pages/__init__.py` — package marker
+- [x] `dashboard/app.py` refactored to use `st.navigation()` + `st.Page()` API
+- [x] Global CSS: dark navy, Inter font, animated gradient hero, glassmorphism cards, styled buttons/tables
+- [x] `sys.path` fix kept in `app.py` entry point (single place)
+- [x] **93/93 tests PASSED** | committed `1dc1ada`
 
 

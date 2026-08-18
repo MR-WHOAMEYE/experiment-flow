@@ -88,11 +88,11 @@
 
 | Story | Title | Points | Status | Notes |
 |-------|-------|--------|--------|-------|
-| US-9.1 | Home page — hero, CTA, recent experiments table | 3 | In Progress | Depends on US-8.1, US-8.2 |
-| US-9.2 | Create Experiment — 4-step wizard (data source → analysis → configure → review) | 8 | In Progress | Depends on US-1.1, US-1.2, US-4.1, US-5.1 |
-| US-9.3 | Results Dashboard — plain-language verdict, Plotly charts, diagnostics | 5 | In Progress | Depends on US-8.2, US-9.2 |
-| US-9.4 | Experiment History — searchable table, pagination, clone action | 3 | In Progress | Depends on US-9.1 |
-| US-9.5 | Settings page — placeholder with future config items | 1 | In Progress | Standalone |
+| US-9.1 | Home page — hero, CTA, recent experiments table | 3 | Done | Depends on US-8.1, US-8.2 |
+| US-9.2 | Create Experiment — 4-step wizard (data source → analysis → configure → review) | 8 | Done | Depends on US-1.1, US-1.2, US-4.1, US-5.1 |
+| US-9.3 | Results Dashboard — plain-language verdict, Plotly charts, diagnostics | 5 | Done | Depends on US-8.2, US-9.2 |
+| US-9.4 | Experiment History — searchable table, pagination, clone action | 3 | Done | Depends on US-9.1 |
+| US-9.5 | Settings page — placeholder with future config items | 1 | Done | Standalone |
 
 ---
 
