@@ -1,4 +1,4 @@
-﻿# RETRO.md — Sprint Retrospectives
+# RETRO.md — Sprint Retrospectives
 
 > **Rule:** NEVER delete or edit past entries. Append one entry per completed sprint at the bottom.
 
@@ -179,3 +179,25 @@
 
 ### Final Summary & Verification
 - Project tagged as `v1.0.0-final`.
+
+---
+
+## Sprint 8 Retrospective — 2026-08-18
+
+**Sprint Goal:** Add Firecrawl web scraping as a post-release ingestion connector, fully integrated with the existing `BaseConnector` / `raw_ingest` pipeline.
+**Stories Completed:** US-1.4 (3 pts) — 3/3 pts
+**Stories Carried Over:** None
+**Cumulative Project Total:** 84 / 84 pts (100% completion incl. extension)
+
+### What Went Well
+- `FirecrawlConnector` slotted into `BaseConnector` with zero changes to any downstream pipeline — the architectural decision to abstract connectors behind an interface paid off immediately.
+- 17 fully offline tests written and passing in one session; `responses` mocking library enabled complete HTTP contract testing without a live Firecrawl API key.
+- Async crawl polling pattern (1 s sleep, 60-attempt ceiling) is clean and predictable; `monkeypatch` of `time.sleep` made crawl tests instant without real delays.
+- Environment variable pattern (`FIRECRAWL_API_KEY` / `FIRECRAWL_BASE_URL`) follows the established `.env` convention for all credentials in this project.
+
+### What Didn't Go Well
+- `responses` library was not installed in the active Python environment — caused a one-step collection error before install. Should be pinned in `requirements.txt` (or a separate `requirements-dev.txt`) to avoid this in future.
+
+### One Concrete Change for Next Sprint
+- If further extensions are added (e.g., Streamlit UI integration of `FirecrawlConnector`), create a `requirements-dev.txt` that lists test-only deps (`responses`, `pytest-mock`, etc.) separately from production deps in `requirements.txt`.
+

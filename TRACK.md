@@ -1,4 +1,4 @@
-﻿# TRACK.md — Append-Only Development Log
+# TRACK.md — Append-Only Development Log
 
 > **Rule:** NEVER delete or edit past entries. Always append at the top (most-recent-first) OR at the bottom (chronological). This project uses **chronological order** (append at the bottom).
 > Each entry starts with `## YYYY-MM-DD — <Story ID or Sprint>`.
@@ -244,3 +244,36 @@
 **Blockers:** None.
 
 **Status:** Project complete. 81 points delivered across 7 sprints.
+
+---
+
+## 2026-08-18 — US-1.4 (Sprint 8 — Post-Release: Firecrawl Web Scraping)
+
+**What was done:**
+- Added `ingestion/connectors/firecrawl_connector.py`: new `FirecrawlConnector(BaseConnector)` implementing:
+  - `fetch(url)`: single-page scrape via Firecrawl API POST `/v1/scrape`, returns `DataFrame(url, title, content, scraped_at)`.
+  - `fetch(url, crawl=True, limit=N)`: async site crawl via POST `/v1/crawl` with polling loop on GET `/v1/crawl/{job_id}` until `status == "completed"`.
+  - `test_connection()`: lightweight GET ping to Firecrawl base URL, returns bool (never raises).
+  - Auth via `FIRECRAWL_API_KEY` env var; base URL overridable via `FIRECRAWL_BASE_URL` for self-hosted instances.
+- Added `tests/test_firecrawl_connector.py`: 17 fully offline tests using the `responses` HTTP mocking library:
+  - 5 construction/env-var tests, 3 `test_connection` tests, 5 single-scrape tests, 4 crawl-mode tests.
+  - All 17 PASSED.
+- Updated `requirements.txt`: added `firecrawl-py==1.7.0`.
+- Updated `.env`: added `FIRECRAWL_API_KEY=your_firecrawl_api_key_here` placeholder and `FIRECRAWL_BASE_URL` comment.
+- Committed as `455a94e`: `feat: add FirecrawlConnector for web scraping (US-1.2 extension) - 17/17 tests passed`.
+- Updated BACKLOG.md: US-1.4 → Done; Sprint 8 row added; total revised to ~84 pts.
+- Updated SPRINT.md: Sprint 8 section added with full story checklist.
+- Updated RETRO.md: Sprint 8 retrospective appended.
+
+**Decisions made:**
+- `FirecrawlConnector` derives from `BaseConnector` so it is a drop-in source for `upsert_to_clean_records()` — no changes needed to existing pipeline.
+- Async crawl uses a Python polling loop (1 s intervals, 60 attempts max) rather than Firecrawl SDK so there are no extra runtime dependencies beyond `requests`.
+- `responses` mocking library (`pip install responses`) added to dev environment for offline HTTP testing; not pinned in `requirements.txt` (test-only dep, already present from Sprint 2).
+- All HTTP I/O is mocked in tests — no real network calls; safe to run in CI without a real Firecrawl key.
+
+**Blockers:** None. (FIRECRAWL_API_KEY placeholder in .env — user must fill in real key before making live scrape calls.)
+
+**Next:**
+- User must set `FIRECRAWL_API_KEY` in `.env` to use the connector against real URLs.
+- Optional: Add `FirecrawlConnector` as an ingestion option in the Streamlit dashboard sidebar (US-8.1 extension).
+

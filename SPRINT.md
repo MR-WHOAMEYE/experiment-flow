@@ -1,4 +1,4 @@
-﻿# SPRINT.md — Current Sprint
+# SPRINT.md — Current Sprint
 
 > **Rule:** Wipe and rewrite this file at the start of each new sprint. History lives in RETRO.md.
 
@@ -46,3 +46,39 @@
 - [x] Live Neon PostgreSQL Database connected & schema migrated
 - [x] DB EXPLAIN ANALYZE index optimization verified (263.62x speedup)
 - [x] Final Tag: `v1.0.0-final`
+
+---
+
+## Sprint 8 — Post-Release Extension: Web Scraping ✅ COMPLETE
+
+| Field | Value |
+|-------|-------|
+| **Sprint Goal** | Add `FirecrawlConnector` (web scraping) as a new ingestion source that plugs into the existing `raw_ingest` pipeline, with full offline test coverage. |
+| **Start Date** | 2026-08-18 |
+| **End Date** | 2026-08-18 |
+| **Total Points** | 3 |
+| **Git Tag** | `455a94e` (post-v1.0.0-final) |
+
+## Stories
+
+| Story | Title | Points | Status |
+|-------|-------|--------|--------|
+| US-1.4 | Firecrawl web scraping connector | 3 | ✅ Done |
+
+## Story Checklist
+
+### US-1.4 — Firecrawl Web Scraping Connector
+- [x] `ingestion/connectors/firecrawl_connector.py` — `FirecrawlConnector(BaseConnector)` implementing:
+  - [x] `fetch(url)` — single-page scrape via POST `/v1/scrape`
+  - [x] `fetch(url, crawl=True, limit=N)` — async site crawl via POST `/v1/crawl` with polling
+  - [x] Output: `DataFrame(url, title, content, scraped_at)` → `raw_ingest` pipeline
+  - [x] `FIRECRAWL_API_KEY` / `FIRECRAWL_BASE_URL` env var support (self-hosted & cloud)
+- [x] `tests/test_firecrawl_connector.py` — 17 offline tests (all HTTP mocked via `responses`)
+  - [x] Construction & env-var key discovery (5 tests)
+  - [x] `test_connection()` — 2xx success, HTTP error, connection error (3 tests)
+  - [x] Single-page `fetch()` — columns, row count, content, error cases (5 tests)
+  - [x] Crawl-mode `fetch()` — multi-row output, submit failure, failed status, missing ID (4 tests)
+- [x] `requirements.txt` — `firecrawl-py==1.7.0` added
+- [x] `.env` — `FIRECRAWL_API_KEY` placeholder + `FIRECRAWL_BASE_URL` comment added
+- [x] **17/17 tests PASSED** | committed `455a94e`
+

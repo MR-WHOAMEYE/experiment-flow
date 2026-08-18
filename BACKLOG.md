@@ -1,4 +1,4 @@
-﻿# EaaS Platform — Product Backlog
+# EaaS Platform — Product Backlog
 
 > Mirrors `prompt.md §5`. Update the **Status** column whenever a story changes state.
 > Statuses: `Not Started` | `In Progress` | `Blocked` | `Done`
@@ -12,6 +12,7 @@
 | US-1.1 | Upload CSV / Excel file | 5 | Done | |
 | US-1.2 | Connect API / PostgreSQL / MySQL source | 8 | Done | |
 | US-1.3 | Re-upload without creating duplicates (upsert) | 5 | Done | Depends on US-1.1 |
+| US-1.4 | Firecrawl web scraping connector | 3 | Done | Extends US-1.2; single-page + async site crawl |
 
 ---
 
@@ -75,6 +76,14 @@
 
 ---
 
+## Post-Release Extensions (Sprint 8 — after v1.0.0-final)
+
+| Story | Title | Points | Status | Notes |
+|-------|-------|--------|--------|-------|
+| US-1.4 | Firecrawl web scraping connector | 3 | Done | `ingestion/connectors/firecrawl_connector.py`; 17/17 tests |
+
+---
+
 ## Sprint Allocation Summary
 
 | Sprint | Stories | Points | Theme |
@@ -87,16 +96,7 @@
 | Sprint 5 | US-5.1, US-5.2 | 13 | ML prediction + auto-retrain |
 | Sprint 6 | US-6.1, US-6.2, US-7.1 | 13 | Dashboard + n8n automation |
 | Sprint 7 | US-8.1, US-8.2 | 11 | Self-service frontend |
-| **Total** | | **~81 pts** | |
-
-
-
-
-
-
-
-
-
-
+| Sprint 8 | US-1.4 | 3 | Post-release: Firecrawl web scraping |
+| **Total** | | **~84 pts** | |
 
 
